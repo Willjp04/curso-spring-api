@@ -20,13 +20,20 @@ public class Usuario implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-
-	private String login;
 	private String nome;
+	private String login;
 	private String senha;
 
 	@OneToMany(mappedBy = "usuario", orphanRemoval = true, cascade = CascadeType.ALL)
 	private List<Telefone> telefones = new ArrayList<Telefone>();
+
+	public List<Telefone> getTelefones() {
+		return telefones;
+	}
+
+	public void setTelefones(List<Telefone> telefones) {
+		this.telefones = telefones;
+	}
 
 	public Integer getId() {
 		return id;
