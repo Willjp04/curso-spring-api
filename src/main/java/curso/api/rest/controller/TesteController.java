@@ -70,6 +70,10 @@ public class TesteController {
 	@PutMapping(value = "/editar")
 	@ResponseBody
 	public ResponseEntity<?> editar(@RequestBody Usuario usuario) {
+
+		for (int pos = 0; pos < usuario.getTelefones().size(); pos++) {
+			usuario.getTelefones().get(pos).setUsuario(usuario);
+		}
 		if (usuario.getId() == null) {
 			return new ResponseEntity<String>("ID do usuário não Foi encontrado para atualização", HttpStatus.OK);
 
