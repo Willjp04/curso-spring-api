@@ -6,7 +6,6 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.aspectj.lang.annotation.RequiredTypes;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -22,9 +21,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JWTTokenAutenticacaoService {
 
-	// TEMPO DE VALIDADE DO TOKEN PARA 1 DIA//
+	// TEMPO DE VALIDADE DO TOKEN PARA 2 DIAS//
 
-	private static final Integer EXPIRATION_TIME = 86400000;
+	private static final Integer EXPIRATION_TIME = 172800000;
 
 	// UMA SENHA UNICA PARA COMPOR A AUTENTICAÇÃO E AJUDAR NA SEGURANÇA
 	private static final String SECRET = "SenhaExtremamenteSecreta";
@@ -59,7 +58,7 @@ public class JWTTokenAutenticacaoService {
 	// RETORNA O USUÁRIO VALIDADO COM TOKEN//
 	// SE NÃO FOR VÁLIDO, RETORNA NULL//
 
-	public Authentication geAuthentication(HttpServletRequest request) {
+	public Authentication getAuthentication(HttpServletRequest request) {
 
 		// PEGA O TOKEN ENVIADO NO CABEÇALHO HTTP
 
@@ -75,10 +74,12 @@ public class JWTTokenAutenticacaoService {
 			if (user != null) {
 
 				Usuario usuario = ApplicationContextLoad.getApplicationContext().getBean(UsuarioRepository.class)
-						.findByLogin(user);
+						.findUserByLogin(user);
 
 				if (usuario != null) {
-					return new UsernamePasswordAuthenticationToken(usuario.getLogin(), usuario.getSenha(),
+					return new UsernamePasswordAuthenticationToken(
+							usuario.getLogin(), 
+							usuario.getSenha(),
 							usuario.getAuthorities());
 				}
 

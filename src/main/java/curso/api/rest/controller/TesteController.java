@@ -78,7 +78,7 @@ public class TesteController {
 			return new ResponseEntity<String>("ID do usuário não Foi encontrado para atualização", HttpStatus.OK);
 
 		}
-		Usuario usuarioEdita = usuarioRepository.saveAndFlush(usuario);
+		Usuario usuarioEdita = usuarioRepository.save(usuario);
 
 		return new ResponseEntity<Usuario>(usuarioEdita, HttpStatus.OK);
 	}
