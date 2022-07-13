@@ -54,8 +54,8 @@ public class TesteController {
 			usuario.getTelefones().get(pos).setUsuario(usuario);
 		}
 		// AQUI ESTÁ CONFIGURANDO PARA UTILIZAR A SENHA CADASTRADA NO DB
-		String senhaCriptografada = new BCryptPasswordEncoder().encode(usuario.getSenha());
-		usuario.setSenha(senhaCriptografada);
+		//String senhaCriptografada = new BCryptPasswordEncoder().encode(usuario.getSenha());
+	//	usuario.setSenha(senhaCriptografada);
 
 		Usuario usuarioSalvo = usuarioRepository.save(usuario);
 
