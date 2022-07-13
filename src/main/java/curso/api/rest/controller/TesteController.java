@@ -28,9 +28,18 @@ public class TesteController {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
-	@GetMapping(value = "/{id}", produces = "application/json")
+	@GetMapping(value = "v1/{id}", produces = "application/json")
 
-	public ResponseEntity<Usuario> init(@PathVariable(value = "id") Integer id) {
+	public ResponseEntity<Usuario> buscaPorId(@PathVariable(value = "id") Integer id) {
+
+		Optional<Usuario> usuario = usuarioRepository.findById(id);
+
+		return new ResponseEntity<Usuario>(usuario.get(), HttpStatus.OK);
+	}
+
+	@GetMapping(value = "v2/{id}", produces = "application/json")
+
+	public ResponseEntity<Usuario> buscaPorId2(@PathVariable(value = "id") Integer id) {
 
 		Optional<Usuario> usuario = usuarioRepository.findById(id);
 
@@ -53,10 +62,10 @@ public class TesteController {
 		for (int pos = 0; pos < usuario.getTelefones().size(); pos++) {
 			usuario.getTelefones().get(pos).setUsuario(usuario);
 		}
-		// AQUI ESTÁ CONFIGURANDO PARA UTILIZAR A SENHA CADASTRADA NO DB
-		//String senhaCriptografada = new BCryptPasswordEncoder().encode(usuario.getSenha());
-	//	usuario.setSenha(senhaCriptografada);
 
+		// AQUI ESTÁ CONFIGURANDO PARA UTILIZAR A SENHA CADASTRADA NO DB
+		String senhaCriptografada = new BCryptPasswordEncoder().encode(usuario.getSenha());
+		usuario.setSenha(senhaCriptografada);
 		Usuario usuarioSalvo = usuarioRepository.save(usuario);
 
 		return new ResponseEntity<Usuario>(usuarioSalvo, HttpStatus.OK);
@@ -79,10 +88,19 @@ public class TesteController {
 		for (int pos = 0; pos < usuario.getTelefones().size(); pos++) {
 			usuario.getTelefones().get(pos).setUsuario(usuario);
 		}
+
+		Usuario usertemp = usuarioRepository.findUserByLogin(usuario.getLogin());
+
 		if (usuario.getId() == null) {
 			return new ResponseEntity<String>("ID do usuário não Foi encontrado para atualização", HttpStatus.OK);
 
 		}
+		// CONDIÇÃO PARA VALIDAR SENHA DO USUÁRIO
+		if (!usertemp.getSenha().equals(usuario.getSenha())) {
+			String senhaCriptografada = new BCryptPasswordEncoder().encode(usuario.getSenha());
+			usuario.setSenha(senhaCriptografada);
+		}
+
 		Usuario usuarioEdita = usuarioRepository.save(usuario);
 
 		return new ResponseEntity<Usuario>(usuarioEdita, HttpStatus.OK);

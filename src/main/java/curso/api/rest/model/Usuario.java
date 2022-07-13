@@ -37,6 +37,7 @@ public class Usuario implements UserDetails {
 
 	@Column(unique = true)
 	private String login;
+
 	private String senha;
 
 	@OneToMany(mappedBy = "usuario", orphanRemoval = true, cascade = CascadeType.ALL)
