@@ -39,6 +39,8 @@ public class Usuario implements UserDetails {
 	private String login;
 
 	private String senha;
+	@Column(unique = true)
+	private String cpf;
 
 	@OneToMany(mappedBy = "usuario", orphanRemoval = true, cascade = CascadeType.ALL)
 	private List<Telefone> telefones = new ArrayList<Telefone>();
@@ -52,6 +54,16 @@ public class Usuario implements UserDetails {
 					referencedColumnName = "id", table = "role", unique = false, updatable = false, foreignKey = @ForeignKey(name = "role_fk", value = ConstraintMode.CONSTRAINT)))
 
 	private List<Role> roles;
+
+	private String token = "";
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
 
 	public List<Telefone> getTelefones() {
 		return telefones;
@@ -67,6 +79,14 @@ public class Usuario implements UserDetails {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
 	}
 
 	public String getLogin() {
