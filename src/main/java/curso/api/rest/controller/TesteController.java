@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,6 +32,8 @@ public class TesteController {
 	private UsuarioRepository usuarioRepository;
 
 	@GetMapping(value = "v1/{id}", produces = "application/json")
+	@CacheEvict(value = "cacheusers", allEntries = true)
+	@CachePut("cacheusers")
 
 	public ResponseEntity<Usuario> buscaPorId(@PathVariable(value = "id") Integer id) {
 
@@ -38,6 +43,8 @@ public class TesteController {
 	}
 
 	@GetMapping(value = "v2/{id}", produces = "application/json")
+	@CacheEvict(value = "cacheusers", allEntries = true)
+	@CachePut("cacheusers")
 
 	public ResponseEntity<Usuario> buscaPorId2(@PathVariable(value = "id") Integer id) {
 
@@ -47,7 +54,9 @@ public class TesteController {
 	}
 
 	@GetMapping(value = "/", produces = "application/json")
-	public ResponseEntity<List<Usuario>> buscaTodos() {
+	@CacheEvict(value = "cacheusuarios", allEntries = true)
+	@CachePut("cacheusuarios")
+	public ResponseEntity<List<Usuario>> buscaTodos() throws InterruptedException {
 
 		List<Usuario> list = (List<Usuario>) usuarioRepository.findAll();
 
