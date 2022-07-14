@@ -31,22 +31,9 @@ public class TesteController {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
-	@GetMapping(value = "v1/{id}", produces = "application/json")
-	@CacheEvict(value = "cacheusers", allEntries = true)
-	@CachePut("cacheusers")
+	@GetMapping(value = "/{id}", produces = "application/json")
 
 	public ResponseEntity<Usuario> buscaPorId(@PathVariable(value = "id") Integer id) {
-
-		Optional<Usuario> usuario = usuarioRepository.findById(id);
-
-		return new ResponseEntity<Usuario>(usuario.get(), HttpStatus.OK);
-	}
-
-	@GetMapping(value = "v2/{id}", produces = "application/json")
-	@CacheEvict(value = "cacheusers", allEntries = true)
-	@CachePut("cacheusers")
-
-	public ResponseEntity<Usuario> buscaPorId2(@PathVariable(value = "id") Integer id) {
 
 		Optional<Usuario> usuario = usuarioRepository.findById(id);
 
