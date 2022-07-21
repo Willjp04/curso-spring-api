@@ -1,7 +1,11 @@
 package curso.api.rest;
 
+import java.sql.SQLException;
 import java.util.List;
 
+import org.hibernate.exception.ConstraintViolationException;
+import org.postgresql.util.PSQLException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +44,40 @@ public class ControleExcecoes extends ResponseEntityExceptionHandler {
 
 		return new ResponseEntity<>(objetoErro, headers, status);
 
-		return super.handleExceptionInternal(ex, body, headers, status, request);
+	}
+
+	@ExceptionHandler({ DataIntegrityViolationException.class, ConstraintViolationException.class, PSQLException.class,
+			SQLException.class })
+	protected ResponseEntity<Object> handleExceptionDataIntegry(Exception ex) {
+
+		String msg = "";
+
+		if (ex instanceof DataIntegrityViolationException) {
+			msg = ((DataIntegrityViolationException) ex).getCause().getCause().getMessage();
+		}
+
+		else if (ex instanceof ConstraintViolationException) {
+			msg = ((DataIntegrityViolationException) ex).getCause().getCause().getMessage();
+		} else if (ex instanceof PSQLException) {
+			msg = ((PSQLException) ex).getCause().getCause().getMessage();
+		} else if (ex instanceof SQLException) {
+			msg = ((SQLException) ex).getCause().getCause().getMessage();
+		}
+
+		else
+
+		{
+			msg = ex.getMessage();
+		}
+
+		ObjetoErro objetoErro = new ObjetoErro();
+
+		objetoErro.setError(msg);
+		objetoErro.setCodigo(
+				HttpStatus.INTERNAL_SERVER_ERROR + " ==> " + HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+
+		return new ResponseEntity<>(objetoErro, HttpStatus.INTERNAL_SERVER_ERROR);
+
 	}
 
 }
