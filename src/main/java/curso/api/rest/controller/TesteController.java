@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import curso.api.rest.model.Usuario;
+import curso.api.rest.model.UsuarioDTO;
 import curso.api.rest.repository.UsuarioRepository;
 
 @RestController
@@ -33,11 +35,11 @@ public class TesteController {
 
 	@GetMapping(value = "/{id}", produces = "application/json")
 
-	public ResponseEntity<Usuario> buscaPorId(@PathVariable(value = "id") Integer id) {
+	public ResponseEntity<UsuarioDTO> buscaPorId(@PathVariable(value = "id") Integer id) {
 
 		Optional<Usuario> usuario = usuarioRepository.findById(id);
 
-		return new ResponseEntity<Usuario>(usuario.get(), HttpStatus.OK);
+		return new ResponseEntity<UsuarioDTO>(new UsuarioDTO(usuario.get()), HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/", produces = "application/json")
